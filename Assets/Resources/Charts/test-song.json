@@ -1,0 +1,26 @@
+{
+  "song": "test-song",
+  "bpm": 110,
+  "notes": [
+      { "time": 2.000, "lane": 0, "sustainLength": 0.0 },
+      { "time": 2.545, "lane": 1, "sustainLength": 0.0 },
+      { "time": 3.091, "lane": 2, "sustainLength": 0.0 },
+      { "time": 3.636, "lane": 3, "sustainLength": 0.0 },
+      { "time": 4.182, "lane": 0, "sustainLength": 0.0 },
+      { "time": 4.727, "lane": 1, "sustainLength": 0.0 },
+      { "time": 5.273, "lane": 2, "sustainLength": 0.0 },
+      { "time": 5.818, "lane": 3, "sustainLength": 0.0 },
+      { "time": 6.364, "lane": 0, "sustainLength": 0.0 },
+      { "time": 6.909, "lane": 1, "sustainLength": 0.0 },
+      { "time": 7.455, "lane": 2, "sustainLength": 0.0 },
+      { "time": 8.000, "lane": 3, "sustainLength": 0.0 },
+      { "time": 8.545, "lane": 0, "sustainLength": 0.0 },
+      { "time": 9.091, "lane": 1, "sustainLength": 0.0 },
+      { "time": 9.636, "lane": 2, "sustainLength": 0.0 },
+      { "time": 10.182, "lane": 3, "sustainLength": 0.0 },
+      { "time": 10.727, "lane": 0, "sustainLength": 0.0 },
+      { "time": 11.273, "lane": 1, "sustainLength": 0.0 },
+      { "time": 11.818, "lane": 2, "sustainLength": 0.0 },
+      { "time": 12.364, "lane": 3, "sustainLength": 0.0 }
+  ]
+}
