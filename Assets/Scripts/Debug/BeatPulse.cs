@@ -52,5 +52,11 @@ namespace FunkyThursday.Debug
 
             target.localScale = Vector3.Lerp(target.localScale, baseScale, Time.deltaTime * returnSpeed);
         }
+
+        /// <summary>Immediately scales up by the given multiplier of the resting scale; decays back via the normal per-frame Lerp. Lets other systems (e.g. a note hit) punch the same Transform this script already owns, without fighting over localScale.</summary>
+        public void Punch(float scaleMultiplier)
+        {
+            target.localScale = baseScale * scaleMultiplier;
+        }
     }
 }

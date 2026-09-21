@@ -25,6 +25,14 @@ namespace FunkyThursday.Gameplay
         [Header("Countdown")]
         public float countdownSeconds = 3f;
 
+        [Header("Characters")]
+        public float characterScale = 3f;
+        [Tooltip("Horizontal gap between the lane row's outer edge and each character.")]
+        public float characterGapX = 3f;
+        public float characterY = 0.5f;
+
+        private const int LaneCount = 4;
+
         private Conductor conductor;
         private LevelData level;
         private bool songStarted;
@@ -53,6 +61,7 @@ namespace FunkyThursday.Gameplay
             }
 
             SpawnReceptors();
+            SpawnCharacters();
             SetUpConductor();
             SetUpScoreManager();
             SetUpHealthManager();
@@ -91,7 +100,36 @@ namespace FunkyThursday.Gameplay
 
                 BeatPulse pulse = receptor.AddComponent<BeatPulse>();
                 pulse.target = receptor.transform;
+
+                ReceptorHitFlash hitFlash = receptor.AddComponent<ReceptorHitFlash>();
+                hitFlash.lane = lane;
             }
+        }
+
+        private void SpawnCharacters()
+        {
+            float halfWidth = (LaneCount - 1) * laneSpacing / 2f;
+
+            SpawnCharacter("Opponent", -halfWidth - characterGapX,
+                new Color(0.55f, 0.6f, 0.75f), new Color(0.3f, 0.35f, 0.5f), isPlayerControlled: false);
+
+            SpawnCharacter("Player", halfWidth + characterGapX,
+                new Color(0.95f, 0.75f, 0.35f), new Color(0.65f, 0.4f, 0.15f), isPlayerControlled: true);
+        }
+
+        private void SpawnCharacter(string name, float x, Color bodyColor, Color accentColor, bool isPlayerControlled)
+        {
+            GameObject character = new GameObject(name);
+            character.transform.SetParent(transform);
+            character.transform.position = new Vector3(x, characterY, 0f);
+            character.transform.localScale = Vector3.one * characterScale;
+
+            SpriteRenderer renderer = character.AddComponent<SpriteRenderer>();
+            renderer.sprite = PlaceholderAssetFactory.CreateCharacterSprite(bodyColor, accentColor);
+            renderer.sortingOrder = -2;
+
+            CharacterBopController bop = character.AddComponent<CharacterBopController>();
+            bop.isPlayerControlled = isPlayerControlled;
         }
 
         private void SetUpConductor()

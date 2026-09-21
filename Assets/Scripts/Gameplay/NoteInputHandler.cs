@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -12,6 +13,9 @@ namespace FunkyThursday.Gameplay
     /// </summary>
     public class NoteInputHandler : MonoBehaviour
     {
+        /// <summary>Fired for every successful hit (never for a ghost tap/miss); lets receptor/character visuals react without this class knowing about them.</summary>
+        public static event Action<int, HitJudgment> OnLaneHit;
+
         private void Update()
         {
             if (Keyboard.current == null)
@@ -66,6 +70,8 @@ namespace FunkyThursday.Gameplay
                 HitJudgment judgment = closestNote.GetJudgment(closestDelta);
                 ScoreManager.Instance?.RegisterHit(judgment);
                 HealthManager.Instance?.ApplyJudgment(judgment);
+                CharacterBopController.PlayerInstance?.PlaySing(lane);
+                OnLaneHit?.Invoke(lane, judgment);
                 closestNote.Hit();
                 UnityEngine.Debug.Log($"[Input] {judgment} hit lane {lane} (offset {closestDelta * 1000f:F0} ms)");
             }

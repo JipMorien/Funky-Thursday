@@ -38,9 +38,18 @@ namespace FunkyThursday.Core
         [SerializeField] private int combo;
         [SerializeField] private int maxCombo;
 
+        [Header("Combo Pop")]
+        [Tooltip("Extra font size added to the combo readout at the instant combo increases.")]
+        public float comboPopSize = 16f;
+
+        [Tooltip("How quickly the combo pop decays back to its resting size.")]
+        public float comboPopDecaySpeed = 10f;
+
         public int Score => score;
         public int Combo => combo;
         public int MaxCombo => maxCombo;
+
+        private float comboPopAmount;
 
         private void Awake()
         {
@@ -75,6 +84,7 @@ namespace FunkyThursday.Core
             {
                 combo++;
                 maxCombo = Mathf.Max(maxCombo, combo);
+                comboPopAmount = 1f;
             }
 
             UnityEngine.Debug.Log($"[ScoreManager] {judgment} (+{points}) - Score: {score}, Combo: {combo}");
@@ -98,6 +108,11 @@ namespace FunkyThursday.Core
             }
         }
 
+        private void Update()
+        {
+            comboPopAmount = Mathf.MoveTowards(comboPopAmount, 0f, Time.deltaTime * comboPopDecaySpeed);
+        }
+
         private void OnGUI()
         {
             GUIStyle style = new GUIStyle(GUI.skin.label)
@@ -108,7 +123,12 @@ namespace FunkyThursday.Core
             style.normal.textColor = Color.white;
 
             GUI.Label(new Rect(20, 20, 300, 30), $"Score: {score}", style);
-            GUI.Label(new Rect(20, 50, 300, 30), $"Combo: {combo}", style);
+
+            GUIStyle comboStyle = new GUIStyle(style)
+            {
+                fontSize = 24 + Mathf.RoundToInt(comboPopAmount * comboPopSize),
+            };
+            GUI.Label(new Rect(20, 50, 300, 40), $"Combo: {combo}", comboStyle);
         }
     }
 }

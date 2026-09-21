@@ -178,6 +178,7 @@ namespace FunkyThursday.Gameplay
                 {
                     ScoreManager.Instance?.RegisterHit(HitJudgment.Miss);
                     HealthManager.Instance?.ApplyJudgment(HitJudgment.Miss);
+                    CharacterBopController.PlayerInstance?.PlayMiss();
                     UnityEngine.Debug.Log($"[Note] Missed lane {Data.lane} note at {targetSongTime:F2}s");
                 }
                 Destroy(gameObject);
