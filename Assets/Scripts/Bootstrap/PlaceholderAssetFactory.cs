@@ -47,5 +47,13 @@ namespace FunkyThursday.Core
                 new Color(0.95f, 0.15f, 0.15f), // right - red
             };
         }
+
+        /// <summary>
+        /// Z-axis rotation (degrees) that points a single "up"-facing arrow
+        /// sprite in each lane's direction, in lane order: left, down, up,
+        /// right. FNF-style: one arrow asset reused for all 4 lanes instead
+        /// of 4 separate directional sprites.
+        /// </summary>
+        public static readonly float[] LaneArrowRotationsZ = { 90f, 180f, 0f, -90f };
     }
 }

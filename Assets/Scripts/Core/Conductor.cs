@@ -20,6 +20,10 @@ namespace FunkyThursday.Core
                  "latency or lead-in silence. Positive delays the song, negative advances it.")]
         public float songOffsetSeconds = 0f;
 
+        [Tooltip("Optional. If assigned, beat position follows this piecewise tempo instead of the flat bpm above - " +
+                 "use for songs that speed up or slow down mid-track. See AutoChartGenerator.DetectTempoMap.")]
+        public TempoMap tempoMap;
+
         [Header("Read-Only Status")]
         [SerializeField] private float songPositionInSeconds;
         [SerializeField] private float songPositionInBeats;
@@ -32,6 +36,7 @@ namespace FunkyThursday.Core
         public float SongPositionInSeconds => songPositionInSeconds;
         public float SongPositionInBeats => songPositionInBeats;
         public bool SongHasStarted => songHasStarted;
+        public float ClipLengthSeconds => audioSource != null && audioSource.clip != null ? audioSource.clip.length : 0f;
 
         private void Awake()
         {
@@ -61,7 +66,10 @@ namespace FunkyThursday.Core
             }
 
             songPositionInSeconds = (float)(AudioSettings.dspTime - dspSongStartTime) - songOffsetSeconds;
-            songPositionInBeats = songPositionInSeconds / secPerBeat;
+
+            songPositionInBeats = (tempoMap != null && tempoMap.changePoints.Count > 0)
+                ? tempoMap.TimeToBeats(songPositionInSeconds)
+                : songPositionInSeconds / secPerBeat;
         }
 
         /// <summary>

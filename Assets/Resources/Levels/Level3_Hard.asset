@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 201290d8ae80ab245bd588b0515de579, type: 3}
+  m_Name: Level3_Hard
+  m_EditorClassIdentifier: Assembly-CSharp::FunkyThursday.Core.LevelData
+  levelName: Level 3 - Hard
+  description: Auto-generated chart from Parkland.mp3 (Level 3 - Hard).
+  songClip: {fileID: 8300000, guid: feeb56ee388ca1a4b94ce82da1043b83, type: 3}
+  bpm: 100
+  songOffsetSeconds: 0
+  autoDetectBpm: 1
+  autoDetectTempoMap: 0
+  chartResourcePath: 
+  autoChartSettings:
+    windowSizeSeconds: 0.02
+    historySizeSeconds: 1
+    sensitivity: 1.2
+    minSpacingSeconds: 0.1
+    quantizeToGrid: 1
+    gridDivisionsPerBeat: 2
+    minSustainSeconds: 0.3
+    phraseLength: 6
+  noteTravelLeadTime: 1.7

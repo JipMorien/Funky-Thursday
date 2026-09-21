@@ -16,6 +16,14 @@ namespace FunkyThursday.Core
 
         /// <summary>Length in seconds of the hold tail. 0 for a plain tap note.</summary>
         public float sustainLength;
+
+        /// <summary>
+        /// True if the player must hit this note; false if it belongs to the
+        /// opponent/CPU side and auto-resolves (FNF's call-and-response).
+        /// Defaults to true so charts/JSON written before this field existed
+        /// still behave exactly as before.
+        /// </summary>
+        public bool isPlayerNote = true;
     }
 
     /// <summary>

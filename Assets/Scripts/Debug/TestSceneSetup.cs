@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FunkyThursday.Core;
+using FunkyThursday.Gameplay;
 
 namespace FunkyThursday.Debug
 {
@@ -16,18 +17,33 @@ namespace FunkyThursday.Debug
         [Tooltip("Assign a test music clip here in the Inspector.")]
         public AudioClip testClip;
 
-        [Tooltip("BPM of the assigned test clip. Set this per-song instead of editing Conductor.")]
+        [Tooltip("BPM of the assigned test clip. Set this per-song instead of editing Conductor. Ignored if Auto Detect Bpm is on.")]
         public float songBpm = 110f;
+
+        [Tooltip("If on, estimate BPM automatically from testClip's audio instead of using Song Bpm. " +
+                 "Fixes long-song drift caused by a hand-guessed tempo being slightly wrong.")]
+        public bool autoDetectBpm = false;
+
+        [Tooltip("If on, build a full tempo map instead of a single BPM, so tempo changes mid-song " +
+                 "(speed-ups/slow-downs) are tracked instead of breaking sync. Takes priority over Auto Detect Bpm.")]
+        public bool autoDetectTempoMap = false;
 
         [Tooltip("Seconds to shift song position by, to compensate for audio latency or lead-in silence.")]
         public float songOffsetSeconds = 0f;
 
         [Header("Receptor Layout")]
+        [Tooltip("Directional arrow sprite, drawn facing up. Rotated per lane at runtime (FNF-style: one " +
+                 "sprite reused for all 4 lanes) and tinted with that lane's colour. If left unassigned, " +
+                 "falls back to a plain coloured square.")]
+        public Sprite arrowSprite;
+
         [Tooltip("Size in world units of each receptor square.")]
         public float receptorSize = 1f;
 
-        [Tooltip("Gap in world units between receptor squares.")]
-        public float receptorSpacing = 1.5f;
+        [Tooltip("Gap in world units between receptor squares. Must match NoteSpawner.laneSpacing so notes line " +
+                 "up with the receptors, and be bigger than the arrow sprite's world-space width or adjacent " +
+                 "lanes will visually overlap.")]
+        public float receptorSpacing = 2.8f;
 
         [Tooltip("Y position (world units) of the receptor row.")]
         public float receptorHeightY = 3.5f;
@@ -39,6 +55,8 @@ namespace FunkyThursday.Debug
         {
             SpawnReceptors();
             SetUpConductor();
+            SetUpScoreManager();
+            SetUpInputHandler();
         }
 
         private void SpawnReceptors()
@@ -55,7 +73,16 @@ namespace FunkyThursday.Debug
                 receptor.transform.position = new Vector3(startX + lane * receptorSpacing, receptorHeightY, 0f);
 
                 SpriteRenderer renderer = receptor.AddComponent<SpriteRenderer>();
-                renderer.sprite = PlaceholderAssetFactory.CreateSolidSprite(laneColors[lane]);
+                if (arrowSprite != null)
+                {
+                    renderer.sprite = arrowSprite;
+                    renderer.color = laneColors[lane];
+                    receptor.transform.rotation = Quaternion.Euler(0f, 0f, PlaceholderAssetFactory.LaneArrowRotationsZ[lane]);
+                }
+                else
+                {
+                    renderer.sprite = PlaceholderAssetFactory.CreateSolidSprite(laneColors[lane]);
+                }
                 receptor.transform.localScale = Vector3.one * receptorSize;
 
                 BeatPulse pulse = receptor.AddComponent<BeatPulse>();
@@ -70,9 +97,61 @@ namespace FunkyThursday.Debug
             audioSource.clip = testClip;
             audioSource.playOnAwake = false;
 
+            float bpmToUse = songBpm;
+            TempoMap tempoMap = null;
+
+            if (autoDetectTempoMap && testClip != null)
+            {
+                tempoMap = AutoChartGenerator.DetectTempoMap(testClip);
+                if (tempoMap != null && tempoMap.changePoints.Count > 0)
+                {
+                    bpmToUse = tempoMap.changePoints[0].bpm;
+                }
+                else
+                {
+                    UnityEngine.Debug.LogWarning("[TestSceneSetup] Tempo map detection failed; falling back to flat BPM.");
+                }
+            }
+
+            if (tempoMap == null && autoDetectBpm && testClip != null)
+            {
+                float? detectedBpm = AutoChartGenerator.DetectBpm(testClip);
+                if (detectedBpm.HasValue)
+                {
+                    bpmToUse = detectedBpm.Value;
+                }
+                else
+                {
+                    UnityEngine.Debug.LogWarning("[TestSceneSetup] BPM auto-detection failed; falling back to Song Bpm.");
+                }
+            }
+
             conductor = conductorObject.AddComponent<Conductor>();
-            conductor.bpm = songBpm;
+            conductor.bpm = bpmToUse;
+            conductor.tempoMap = tempoMap;
             conductor.songOffsetSeconds = songOffsetSeconds;
+        }
+
+        private void SetUpScoreManager()
+        {
+            if (ScoreManager.Instance != null)
+            {
+                return;
+            }
+
+            GameObject scoreObject = new GameObject("ScoreManager");
+            scoreObject.AddComponent<ScoreManager>();
+        }
+
+        private void SetUpInputHandler()
+        {
+            if (FindFirstObjectByType<NoteInputHandler>() != null)
+            {
+                return;
+            }
+
+            GameObject inputObject = new GameObject("NoteInputHandler");
+            inputObject.AddComponent<NoteInputHandler>();
         }
 
         private void Update()
