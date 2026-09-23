@@ -44,6 +44,11 @@ namespace FunkyThursday.EditorTools
         static readonly int[] Bpms = { 100, 125, 145, 165 };
 
         [MenuItem("Funky Thursday/Create or Update Song Library")]
+        static void EnsureLibraryMenu()
+        {
+            if (NotInPlayMode()) EnsureLibrary();
+        }
+
         public static SongLibrary EnsureLibrary()
         {
             Directory.CreateDirectory(SongsFolder);
@@ -61,7 +66,28 @@ namespace FunkyThursday.EditorTools
 
             EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(LibraryPath, ImportAssetOptions.ForceSynchronousImport);
+            return Load();
+        }
+
+        /// <summary>
+        /// Loads the library fresh from disk. Scene builders call this after opening a new scene, because
+        /// a reimport or scene switch can leave an earlier reference pointing at a destroyed object,
+        /// which would save as an empty field.
+        /// </summary>
+        public static SongLibrary Load()
+        {
+            var library = AssetDatabase.LoadAssetAtPath<SongLibrary>(LibraryPath);
+            if (library == null) Debug.LogError($"No SongLibrary at {LibraryPath}. Run Funky Thursday → Build All Scenes.");
             return library;
+        }
+
+        /// <summary>Scene building and asset creation are editor-only operations; they fail in Play mode.</summary>
+        public static bool NotInPlayMode()
+        {
+            if (!EditorApplication.isPlayingOrWillChangePlaymode) return true;
+            Debug.LogWarning("Stop Play mode first, then run the Funky Thursday menu item again.");
+            return false;
         }
 
         static SongData EnsureSong(Spec spec, int index)

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8ab120dd1ba08e42b76d5a192d40bce, type: 3}
+  m_Name: SongLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::FunkyThursday.Data.SongLibrary
+  songs:
+  - {fileID: 11400000, guid: 46b88a564e519b642a3e7ed62951f6b8, type: 2}
+  - {fileID: 11400000, guid: 8ce604a8cefdb664e9fd8ded07dc6fcc, type: 2}
+  - {fileID: 11400000, guid: e025eca868f084c4683d0c87cdc88d56, type: 2}
+  - {fileID: 11400000, guid: cce6a0df25dc8a444a0ac882138805d5, type: 2}
+  playerPoses:
+    idle: {fileID: 0}
+    left: {fileID: 0}
+    down: {fileID: 0}
+    up: {fileID: 0}
+    right: {fileID: 0}
+    miss: {fileID: 0}
+    icon: {fileID: 0}
+    iconLosing: {fileID: 0}
+  playerCloak: {r: 0.16862746, g: 0.18431373, b: 0.36862746, a: 1}
+  playerEyes: {r: 0.49803922, g: 0.90588236, b: 1, a: 1}
+  requireUnlocks: 1

@@ -21,16 +21,21 @@ namespace FunkyThursday.EditorTools
         [MenuItem("Funky Thursday/Build Menu Scene")]
         static void BuildMenu()
         {
+            if (!SongLibraryAssets.NotInPlayMode()) return;
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
             SongLibrary library = SongLibraryAssets.EnsureLibrary();
+            if (library == null) return;
             HiggsfieldAssetLinker.Link(library);
-            Build(library);
+            AssetDatabase.SaveAssets();
+            Build(SongLibraryAssets.Load());
             SceneSetup.RegisterScenes();
         }
 
         public static void Build(SongLibrary library)
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            // Opening a scene can unload the object passed in; wire the copy that is on disk.
+            library = SongLibraryAssets.Load();
 
             SceneSetup.CreateCamera(5f);
             SceneSetup.CreateGlobalLight2D();

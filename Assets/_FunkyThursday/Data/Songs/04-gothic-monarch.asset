@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c89e510165ca52b4ca16d61611755e76, type: 3}
+  m_Name: 04-gothic-monarch
+  m_EditorClassIdentifier: Assembly-CSharp::FunkyThursday.Data.SongData
+  id: gothic-monarch
+  displayName: Gothic Monarch
+  opponentName: The Gothic Monarch
+  difficulty: Expert
+  level: 4
+  chart: {fileID: 4900000, guid: b77b29d4a2e01f24eba1ade86c99ec5a, type: 3}
+  instrumental: {fileID: 8300000, guid: 6dfadfdfc864a0549bd6f450f36a148c, type: 3}
+  vocals: {fileID: 8300000, guid: 430e92ee288620249a5c832db94b9b28, type: 3}
+  previewStart: 49.454544
+  opponentCloak: {r: 0.3529412, g: 0.078431375, b: 0.14117648, a: 1}
+  opponentEyes: {r: 1, g: 0.2901961, b: 0.23921569, a: 1}
+  opponentPoses:
+    idle: {fileID: 0}
+    left: {fileID: 0}
+    down: {fileID: 0}
+    up: {fileID: 0}
+    right: {fileID: 0}
+    miss: {fileID: 0}
+    icon: {fileID: 0}
+    iconLosing: {fileID: 0}
+  backdrop: {fileID: 0}
+  backdropTint: {r: 0.9411765, g: 0.627451, b: 0.65882355, a: 1}
+  backdropVideo: 

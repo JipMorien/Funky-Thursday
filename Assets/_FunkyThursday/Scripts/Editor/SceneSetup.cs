@@ -25,15 +25,19 @@ namespace FunkyThursday.EditorTools
         [MenuItem("Funky Thursday/Build All Scenes", priority = 0)]
         static void BuildAll()
         {
+            if (!SongLibraryAssets.NotInPlayMode()) return;
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
 
             SongLibrary library = SongLibraryAssets.EnsureLibrary();
+            if (library == null) return;
             int art = HiggsfieldAssetLinker.Link(library);
-            GameplaySceneBuilder.Build(library);
-            MenuSceneBuilder.Build(library);
+            AssetDatabase.SaveAssets();
+
+            GameplaySceneBuilder.Build(SongLibraryAssets.Load());
+            MenuSceneBuilder.Build(SongLibraryAssets.Load());
             RegisterScenes();
 
-            Debug.Log($"Built Menu and Gameplay scenes ({library.Count} songs, {art} Higgsfield asset(s) linked). Menu is open: press Play.");
+            Debug.Log($"Built Menu and Gameplay scenes ({SongLibraryAssets.Load().Count} songs, {art} Higgsfield asset(s) linked). Menu is open: press Play.");
         }
 
         /// <summary>Menu first (it loads when the game starts), Gameplay second, anything else after.</summary>
