@@ -16,7 +16,7 @@ namespace FunkyThursday.Core
         public float historySizeSeconds = 1.0f;
 
         [Tooltip("A window must exceed the local average energy by this factor to be considered an onset. Lower = more notes.")]
-        public float sensitivity = 1.4f;
+        public float sensitivity = 1.0f;
 
         [Tooltip("Minimum seconds between two detected onsets, to avoid rapid-fire duplicate hits on the same sound.")]
         public float minSpacingSeconds = 0.12f;

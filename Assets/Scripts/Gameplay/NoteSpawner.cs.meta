@@ -1,2 +1,14 @@
 fileFormatVersion: 2
 guid: e3a2bc70130f04b46b26b6fd67425a98
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - songClip: {fileID: 8300000, guid: feeb56ee388ca1a4b94ce82da1043b83, type: 3}
+  - arrowSprite: {instanceID: 0}
+  - notePrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

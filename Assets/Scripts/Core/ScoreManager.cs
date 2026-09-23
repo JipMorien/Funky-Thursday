@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace FunkyThursday.Core
@@ -26,6 +27,9 @@ namespace FunkyThursday.Core
     public class ScoreManager : MonoBehaviour
     {
         public static ScoreManager Instance { get; private set; }
+
+        /// <summary>Fired for every judgment (hits and misses alike) as it's registered, for HUD popups etc. to react to.</summary>
+        public static event Action<HitJudgment> OnJudgment;
 
         [Header("Points Per Judgment")]
         public int perfectPoints = 100;
@@ -88,6 +92,7 @@ namespace FunkyThursday.Core
             }
 
             UnityEngine.Debug.Log($"[ScoreManager] {judgment} (+{points}) - Score: {score}, Combo: {combo}");
+            OnJudgment?.Invoke(judgment);
         }
 
         public void ResetScore()

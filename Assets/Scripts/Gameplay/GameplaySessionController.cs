@@ -181,6 +181,11 @@ namespace FunkyThursday.Gameplay
                 new GameObject("ScoreManager").AddComponent<ScoreManager>();
             }
             ScoreManager.Instance.ResetScore();
+
+            if (FindFirstObjectByType<JudgmentPopup>() == null)
+            {
+                new GameObject("JudgmentPopup").AddComponent<JudgmentPopup>();
+            }
         }
 
         private void SetUpHealthManager()
