@@ -108,3 +108,6 @@ InitTestScene*.unity*
 
 # raw higgsfield downloads
 HiggsfieldRaw/
+
+# fmod spike: copies of the songs for streaming
+Assets/StreamingAssets/FmodSpike/

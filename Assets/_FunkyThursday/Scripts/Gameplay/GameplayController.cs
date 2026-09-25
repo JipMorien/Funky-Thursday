@@ -208,6 +208,8 @@ namespace FunkyThursday.Gameplay
             _last = null;
 
             conductor.AudioOffsetMs = GameSettings.AudioOffsetMs;
+            conductor.Backend = GameSettings.AudioEngine;
+            conductor.SongId = song.id;
             conductor.StartDelay = Mathf.Max(0.5f, countdownBeats * 60f / chart.Bpm);
             conductor.Play(song.instrumental, song.vocals, chart.Bpm);
             State = RoundState.Playing;

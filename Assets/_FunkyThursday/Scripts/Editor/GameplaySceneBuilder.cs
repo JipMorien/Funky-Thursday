@@ -145,6 +145,12 @@ namespace FunkyThursday.EditorTools
             Set(controller, "pauseMenu", pauseMenu);
             Set(controller, "roundEnd", roundEnd);
 
+            // FMOD spike: per-round timing log for the Unity vs FMOD comparison.
+            var logger = CreateChild("Timing Logger", systems, Vector3.zero).AddComponent<TimingLogger>();
+            Set(logger, "controller", controller);
+            Set(logger, "judge", judge);
+            Set(logger, "conductor", conductor);
+
             Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
             EditorSceneManager.SaveScene(scene, ScenePath);
             Selection.activeGameObject = controller.gameObject;

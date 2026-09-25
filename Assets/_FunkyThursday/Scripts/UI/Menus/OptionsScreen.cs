@@ -1,4 +1,5 @@
 using FunkyThursday.Core;
+using FunkyThursday.Core.Audio;
 using UnityEngine;
 
 namespace FunkyThursday.UI.Menus
@@ -11,7 +12,8 @@ namespace FunkyThursday.UI.Menus
         const int Timing = 2;
         const int Ghost = 3;
         const int Unlock = 4;
-        const int Back = 5;
+        const int Engine = 5;
+        const int Back = 6;
 
         MenuList _list;
         PixelText _hint;
@@ -23,10 +25,10 @@ namespace FunkyThursday.UI.Menus
             h.anchorMin = h.anchorMax = h.pivot = new Vector2(0.5f, 1f);
             h.anchoredPosition = new Vector2(0f, -120f);
 
-            RectTransform listRect = UIFactory.Anchored("Options List", Root, new Vector2(0.5f, 1f), new Vector2(0f, -310f), new Vector2(1200f, 600f));
+            RectTransform listRect = UIFactory.Anchored("Options List", Root, new Vector2(0.5f, 1f), new Vector2(0f, -290f), new Vector2(1200f, 690f));
             _list = listRect.gameObject.AddComponent<MenuList>();
             _list.Configure(6f, 96f);
-            _list.SetItems(new[] { "", "", "", "", "", "BACK" });
+            _list.SetItems(new[] { "", "", "", "", "", "", "BACK" });
             _list.Adjusted += HandleAdjust;
             _list.Confirmed += HandleConfirm;
             _list.SelectionChanged += _ => UpdateHint();
@@ -74,6 +76,9 @@ namespace FunkyThursday.UI.Menus
                 case Unlock:
                     GameSettings.UnlockAll = !GameSettings.UnlockAll;
                     break;
+                case Engine:
+                    GameSettings.AudioEngine = GameSettings.AudioEngine == MusicBackendKind.Fmod ? MusicBackendKind.Unity : MusicBackendKind.Fmod;
+                    break;
             }
             RefreshLabels();
         }
@@ -81,7 +86,7 @@ namespace FunkyThursday.UI.Menus
         void HandleConfirm(int index)
         {
             if (index == Back) Menu.OpenMain();
-            else if (index == Timing || index == Ghost || index == Unlock) HandleAdjust(index, 1);
+            else if (index == Timing || index == Ghost || index == Unlock || index == Engine) HandleAdjust(index, 1);
         }
 
         void RefreshLabels()
@@ -92,6 +97,7 @@ namespace FunkyThursday.UI.Menus
             _list.SetLabel(Timing, $"TIMING   {TimingProfile.Label(GameSettings.Timing)}");
             _list.SetLabel(Ghost, $"GHOST TAPPING   {(GameSettings.GhostTapping ? "ON" : "OFF")}");
             _list.SetLabel(Unlock, $"UNLOCK ALL NIGHTS   {(GameSettings.UnlockAll ? "ON" : "OFF")}");
+            _list.SetLabel(Engine, $"AUDIO ENGINE   {(GameSettings.AudioEngine == MusicBackendKind.Fmod ? "FMOD" : "UNITY")}");
         }
 
         static string TimingHint(TimingMode mode)
@@ -114,6 +120,7 @@ namespace FunkyThursday.UI.Menus
                 case Timing: text = TimingHint(GameSettings.Timing); break;
                 case Ghost: text = "ON: PRESSING WITH NO NOTE NEARBY IS FREE"; break;
                 case Unlock: text = "PLAY ANY NIGHT WITHOUT CLEARING THE ONE BEFORE"; break;
+                case Engine: text = "FMOD SPIKE · EVERY ROUND IS LOGGED TO FMOD-SPIKE-TIMING.CSV"; break;
                 default: text = "ENTER OR ESC TO RETURN"; break;
             }
             _hint.Text = text;

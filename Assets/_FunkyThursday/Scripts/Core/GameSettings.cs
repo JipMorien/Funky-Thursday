@@ -1,4 +1,5 @@
 using System;
+using FunkyThursday.Core.Audio;
 using UnityEngine;
 
 namespace FunkyThursday.Core
@@ -14,6 +15,7 @@ namespace FunkyThursday.Core
         const string GhostKey = "ft.settings.ghostTapping";
         const string UnlockKey = "ft.settings.unlockAll";
         const string TimingKey = "ft.settings.timing";
+        const string EngineKey = "ft.settings.audioEngine";
 
         public const float MinOffsetMs = -300f;
         public const float MaxOffsetMs = 300f;
@@ -56,6 +58,13 @@ namespace FunkyThursday.Core
                 return value >= (int)TimingMode.Standard && value <= (int)TimingMode.Demo ? (TimingMode)value : TimingMode.Standard;
             }
             set => Save(() => PlayerPrefs.SetInt(TimingKey, (int)value));
+        }
+
+        /// <summary>FMOD spike: which audio engine plays the song during gameplay.</summary>
+        public static MusicBackendKind AudioEngine
+        {
+            get => PlayerPrefs.GetInt(EngineKey, 0) == 1 ? MusicBackendKind.Fmod : MusicBackendKind.Unity;
+            set => Save(() => PlayerPrefs.SetInt(EngineKey, value == MusicBackendKind.Fmod ? 1 : 0));
         }
 
         /// <summary>Pushes the volume to the AudioListener. Call once per scene.</summary>

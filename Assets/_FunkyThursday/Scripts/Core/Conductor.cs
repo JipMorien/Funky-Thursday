@@ -1,16 +1,21 @@
 using System;
+using FunkyThursday.Core.Audio;
 using UnityEngine;
 
 namespace FunkyThursday.Core
 {
     /// <summary>
     /// The single source of musical time. Schedules the instrumental (and optional vocal) track on
-    /// the DSP clock and exposes the song position in seconds, beats and steps (4 steps per beat).
+    /// the audio engine's DSP clock and exposes the song position in seconds, beats and steps.
     ///
-    /// AudioSettings.dspTime only advances once per audio buffer, so reading it directly makes
-    /// notes stutter. The conductor advances a smoothed clock with unscaledDeltaTime every frame
-    /// and nudges it toward the DSP clock whenever that updates, never moving backwards unless
-    /// the error is large enough to need a hard resync (e.g. after a hitch).
+    /// The audio clock only advances once per mix block, so reading it directly makes notes stutter.
+    /// The conductor advances a smoothed clock with unscaledDeltaTime every frame and nudges it toward
+    /// the audio clock whenever that updates, never moving backwards unless the error is large enough
+    /// to need a hard resync (e.g. after a hitch).
+    ///
+    /// FMOD spike: playback goes through an <see cref="IMusicBackend"/> (Unity AudioSources or the
+    /// FMOD Core API), chosen per round with <see cref="Backend"/>. The smoothing and beat logic is
+    /// shared, and <see cref="ClockStats"/> measures how each engine's clock behaves.
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-100)]
@@ -25,10 +30,21 @@ namespace FunkyThursday.Core
             Finished
         }
 
+        /// <summary>How the audio clock behaved during the current round.</summary>
+        public struct ClockReport
+        {
+            public string backend;
+            public int clockUpdates;
+            public double meanClockStepMs;
+            public double meanClockErrorMs;
+            public double maxClockErrorMs;
+            public int hardResyncs;
+        }
+
         public const int StepsPerBeat = 4;
 
-        const double ResyncThreshold = 0.05;   // seconds of drift before snapping to the DSP clock
-        const double DriftCorrection = 0.5;    // fraction of small drift removed per DSP update
+        const double ResyncThreshold = 0.05;   // seconds of drift before snapping to the audio clock
+        const double DriftCorrection = 0.5;    // fraction of small drift removed per clock update
         const int MaxStepsPerFrame = 64;       // caps event storms after a long hitch
 
         [Header("Timing")]
@@ -39,6 +55,9 @@ namespace FunkyThursday.Core
 
         [Tooltip("Output latency compensation in milliseconds. Raise it if hits feel consistently late.")]
         [SerializeField] float audioOffsetMs = 0f;
+
+        [Header("Audio engine (FMOD spike)")]
+        [SerializeField] MusicBackendKind backend = MusicBackendKind.Unity;
 
         [Header("Sources")]
         [Tooltip("Optional. Created as a child automatically when a vocal track is played.")]
@@ -53,15 +72,22 @@ namespace FunkyThursday.Core
         /// <summary>Fired once when the song position passes the end of the instrumental.</summary>
         public event Action SongFinished;
 
-        AudioSource _source;
-        double _dspSongStart;
-        double _lastDsp;
+        IMusicBackend _music;
+        MusicBackendKind _activeKind;
+        double _songStart;
+        double _lastClock;
         double _smoothedTime;
-        double _pauseDspTime;
+        double _pauseClock;
         double _songLength;
         bool _pausedBeforeStart;
-        bool _hasVocals;
         int _lastStep;
+
+        // Clock measurements for the comparison.
+        int _clockUpdates;
+        double _clockStepSum;
+        double _clockErrorSum;
+        double _clockErrorMax;
+        int _hardResyncs;
 
         public PlaybackState State { get; private set; } = PlaybackState.Stopped;
         public bool IsPlaying => State == PlaybackState.Playing;
@@ -94,11 +120,38 @@ namespace FunkyThursday.Core
             set => startDelay = Mathf.Max(0.1f, value);
         }
 
+        /// <summary>Engine used from the next Play() on.</summary>
+        public MusicBackendKind Backend
+        {
+            get => backend;
+            set => backend = value;
+        }
+
+        /// <summary>Folder name under StreamingAssets/FmodSpike for the FMOD engine (the song id).</summary>
+        public string SongId { get; set; }
+
+        /// <summary>Name of the engine actually playing (falls back to Unity if FMOD isn't available).</summary>
+        public string ActiveBackendName => _music != null ? _music.Name : "none";
+
+        public ClockReport ClockStats => new ClockReport
+        {
+            backend = ActiveBackendName,
+            clockUpdates = _clockUpdates,
+            meanClockStepMs = _clockUpdates > 1 ? _clockStepSum / (_clockUpdates - 1) * 1000.0 : 0.0,
+            meanClockErrorMs = _clockUpdates > 0 ? _clockErrorSum / _clockUpdates * 1000.0 : 0.0,
+            maxClockErrorMs = _clockErrorMax * 1000.0,
+            hardResyncs = _hardResyncs
+        };
+
         void Awake()
         {
-            _source = GetComponent<AudioSource>();
-            ConfigureSource(_source);
-            if (vocalsSource != null) ConfigureSource(vocalsSource);
+            EnsureVocalsSource();
+        }
+
+        void OnDestroy()
+        {
+            _music?.Release();
+            _music = null;
         }
 
         /// <summary>Schedules an instrumental-only song.</summary>
@@ -111,26 +164,25 @@ namespace FunkyThursday.Core
             if (songBpm <= 0f) throw new ArgumentOutOfRangeException(nameof(songBpm), "BPM must be positive.");
 
             Stop();
+            SelectBackend();
 
             bpm = songBpm;
-            _songLength = instrumental.length;
-            _source.clip = instrumental;
-
-            _hasVocals = vocals != null;
-            if (_hasVocals)
+            if (!_music.Load(instrumental, vocals, SongId, out _songLength))
             {
-                EnsureVocalsSource();
-                vocalsSource.clip = vocals;
-                vocalsSource.mute = false;
+                // FMOD couldn't load the files: fall back so the round still plays.
+                Debug.LogWarning($"{_music.Name} could not load the song; falling back to Unity audio.");
+                UseBackend(MusicBackendKind.Unity);
+                _music.Load(instrumental, vocals, SongId, out _songLength);
             }
+            _music.SetVolume(GameSettings.Volume);
 
-            double now = AudioSettings.dspTime;
-            _dspSongStart = now + startDelay;
-            _source.PlayScheduled(_dspSongStart);
-            if (_hasVocals) vocalsSource.PlayScheduled(_dspSongStart);
+            double now = _music.Clock;
+            _songStart = now + startDelay;
+            _music.PlayAt(_songStart);
 
-            _lastDsp = now;
-            _smoothedTime = now - _dspSongStart;
+            ResetClockStats();
+            _lastClock = now;
+            _smoothedTime = now - _songStart;
             SongPosition = _smoothedTime - audioOffsetMs * 0.001;
             _lastStep = CurrentStep - 1;
 
@@ -141,19 +193,11 @@ namespace FunkyThursday.Core
         {
             if (State != PlaybackState.Playing) return;
 
-            _pauseDspTime = AudioSettings.dspTime;
-            _pausedBeforeStart = _pauseDspTime < _dspSongStart;
+            _pauseClock = _music.Clock;
+            _pausedBeforeStart = _pauseClock < _songStart;
 
-            if (_pausedBeforeStart)
-            {
-                _source.Stop();
-                if (_hasVocals) vocalsSource.Stop();
-            }
-            else
-            {
-                _source.Pause();
-                if (_hasVocals) vocalsSource.Pause();
-            }
+            if (_pausedBeforeStart) _music.Stop();
+            else _music.Pause();
 
             State = PlaybackState.Paused;
         }
@@ -162,44 +206,34 @@ namespace FunkyThursday.Core
         {
             if (State != PlaybackState.Paused) return;
 
-            double now = AudioSettings.dspTime;
+            double now = _music.Clock;
 
             if (_pausedBeforeStart)
             {
-                _dspSongStart += now - _pauseDspTime;
-                _source.PlayScheduled(_dspSongStart);
-                if (_hasVocals) vocalsSource.PlayScheduled(_dspSongStart);
+                _songStart += now - _pauseClock;
+                _music.PlayAt(_songStart);
             }
             else
             {
-                if (_hasVocals)
-                {
-                    vocalsSource.timeSamples = Mathf.Min(_source.timeSamples, vocalsSource.clip.samples - 1);
-                    vocalsSource.UnPause();
-                }
-                _source.UnPause();
-                _dspSongStart = now - (double)_source.timeSamples / _source.clip.frequency;
+                _music.Unpause();
+                _songStart = now - _music.PlaybackPosition;
             }
 
-            _lastDsp = now;
-            _smoothedTime = now - _dspSongStart;
+            _lastClock = now;
+            _smoothedTime = now - _songStart;
             SongPosition = _smoothedTime - audioOffsetMs * 0.001;
             State = PlaybackState.Playing;
         }
 
         public void Stop()
         {
-            if (_source != null) _source.Stop();
-            if (vocalsSource != null) vocalsSource.Stop();
+            _music?.Stop();
             State = PlaybackState.Stopped;
             SongPosition = 0.0;
         }
 
         /// <summary>FNF-style: the vocal track drops out while the player is missing.</summary>
-        public void SetVocalsMuted(bool muted)
-        {
-            if (vocalsSource != null) vocalsSource.mute = muted;
-        }
+        public void SetVocalsMuted(bool muted) => _music?.SetVocalsMuted(muted);
 
         public double BeatToSeconds(double beat) => beat * Crochet;
         public double SecondsToBeat(double seconds) => seconds / Crochet;
@@ -223,19 +257,45 @@ namespace FunkyThursday.Core
             double previous = _smoothedTime;
             _smoothedTime += Time.unscaledDeltaTime;
 
-            double dsp = AudioSettings.dspTime;
-            if (dsp != _lastDsp)
+            double clock = _music.Clock;
+            if (clock != _lastClock)
             {
-                _lastDsp = dsp;
-                double target = dsp - _dspSongStart;
+                double step = clock - _lastClock;
+                _lastClock = clock;
+                double target = clock - _songStart;
                 double error = target - _smoothedTime;
 
-                _smoothedTime = Math.Abs(error) > ResyncThreshold
-                    ? target
-                    : Math.Max(previous, _smoothedTime + error * DriftCorrection);
+                RecordClockUpdate(step, Math.Abs(error));
+
+                if (Math.Abs(error) > ResyncThreshold)
+                {
+                    _smoothedTime = target;
+                    _hardResyncs++;
+                }
+                else
+                {
+                    _smoothedTime = Math.Max(previous, _smoothedTime + error * DriftCorrection);
+                }
             }
 
             SongPosition = _smoothedTime - audioOffsetMs * 0.001;
+        }
+
+        void RecordClockUpdate(double step, double absError)
+        {
+            if (_clockUpdates > 0) _clockStepSum += step;
+            _clockErrorSum += absError;
+            if (absError > _clockErrorMax) _clockErrorMax = absError;
+            _clockUpdates++;
+        }
+
+        void ResetClockStats()
+        {
+            _clockUpdates = 0;
+            _clockStepSum = 0.0;
+            _clockErrorSum = 0.0;
+            _clockErrorMax = 0.0;
+            _hardResyncs = 0;
         }
 
         void DispatchSteps()
@@ -255,6 +315,33 @@ namespace FunkyThursday.Core
             }
         }
 
+        void SelectBackend()
+        {
+            MusicBackendKind wanted = backend;
+#if !FT_FMOD
+            if (wanted == MusicBackendKind.Fmod)
+            {
+                Debug.LogWarning("FMOD selected, but the FT_FMOD scripting define isn't set. Using Unity audio.");
+                wanted = MusicBackendKind.Unity;
+            }
+#endif
+            if (_music == null || _activeKind != wanted) UseBackend(wanted);
+        }
+
+        void UseBackend(MusicBackendKind kind)
+        {
+            _music?.Release();
+            _activeKind = kind;
+#if FT_FMOD
+            if (kind == MusicBackendKind.Fmod)
+            {
+                _music = new FmodMusicBackend();
+                return;
+            }
+#endif
+            _music = new UnityMusicBackend(GetComponent<AudioSource>(), vocalsSource);
+        }
+
         void EnsureVocalsSource()
         {
             if (vocalsSource != null) return;
@@ -262,13 +349,6 @@ namespace FunkyThursday.Core
             var child = new GameObject("Vocals");
             child.transform.SetParent(transform, false);
             vocalsSource = child.AddComponent<AudioSource>();
-            ConfigureSource(vocalsSource);
-        }
-
-        static void ConfigureSource(AudioSource source)
-        {
-            source.playOnAwake = false;
-            source.loop = false;
         }
 
         static int PositiveModulo(int value, int divisor) => ((value % divisor) + divisor) % divisor;
