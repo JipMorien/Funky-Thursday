@@ -10,7 +10,8 @@ namespace FunkyThursday.UI
             Scroll,
             Confirm,
             Back,
-            Locked
+            Locked,
+            Secret
         }
 
         const int SampleRate = 44100;
@@ -42,6 +43,7 @@ namespace FunkyThursday.UI
                     Tone("Confirm", 0.22f, 660f, 1320f, 14f),
                     Tone("Back", 0.14f, 520f, 260f, 20f),
                     Tone("Locked", 0.16f, 140f, 110f, 18f),
+                    Tone("Secret", 1.4f, 110f, 880f, 2.2f),
                 };
             }
         }

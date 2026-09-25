@@ -17,6 +17,7 @@ MonoBehaviour:
   opponentName: The Crypt Keeper
   difficulty: Medium
   level: 2
+  secret: 0
   chart: {fileID: 4900000, guid: 8235c60c6e2a1624a925414e8ec15ade, type: 3}
   instrumental: {fileID: 8300000, guid: fe47bcb96b941b145a999c23d23bd455, type: 3}
   vocals: {fileID: 8300000, guid: 980dbb7c4691caa43a7e1c13481be44a, type: 3}

@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c89e510165ca52b4ca16d61611755e76, type: 3}
-  m_Name: 04-gothic-monarch
+  m_Name: 05-abyssal-requiem
   m_EditorClassIdentifier: Assembly-CSharp::FunkyThursday.Data.SongData
-  id: gothic-monarch
-  displayName: Gothic Monarch
-  opponentName: The Gothic Monarch
-  difficulty: Expert
-  level: 4
-  secret: 0
-  chart: {fileID: 4900000, guid: b77b29d4a2e01f24eba1ade86c99ec5a, type: 3}
-  instrumental: {fileID: 8300000, guid: 6dfadfdfc864a0549bd6f450f36a148c, type: 3}
-  vocals: {fileID: 8300000, guid: 430e92ee288620249a5c832db94b9b28, type: 3}
-  previewStart: 49.454544
-  opponentCloak: {r: 0.3529412, g: 0.078431375, b: 0.14117648, a: 1}
-  opponentEyes: {r: 1, g: 0.2901961, b: 0.23921569, a: 1}
+  id: abyssal-requiem
+  displayName: Abyssal Requiem
+  opponentName: The Requiem
+  difficulty: Nightmare
+  level: 5
+  secret: 1
+  chart: {fileID: 4900000, guid: d0f77851ffa031447b1800a00387f5e1, type: 3}
+  instrumental: {fileID: 8300000, guid: 0d62da8cbc3938f44967f7177f56d991, type: 3}
+  vocals: {fileID: 8300000, guid: b5df642e7f37ebb4a9d67df1e5e0bb2c, type: 3}
+  previewStart: 50.666668
+  opponentCloak: {r: 0.84705883, g: 0.8156863, b: 0.7529412, a: 1}
+  opponentEyes: {r: 0.62352943, g: 0.9098039, b: 1, a: 1}
   opponentPoses:
     idle: {fileID: 0}
     left: {fileID: 0}
@@ -34,5 +34,5 @@ MonoBehaviour:
     icon: {fileID: 0}
     iconLosing: {fileID: 0}
   backdrop: {fileID: 0}
-  backdropTint: {r: 0.9411765, g: 0.627451, b: 0.65882355, a: 1}
+  backdropTint: {r: 0.47843137, g: 0.53333336, b: 0.78431374, a: 1}
   backdropVideo: 

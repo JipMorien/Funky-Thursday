@@ -12,7 +12,7 @@ Outputs (relative to the Unity project root):
     Assets/_FunkyThursday/Audio/Music/<slug>/Voices.ogg
 
 Usage:
-    python Tools/song_forge.py              # all four levels
+    python Tools/song_forge.py              # all five levels (5 = secret boss)
     python Tools/song_forge.py --level 3    # one level
     python Tools/song_forge.py --charts-only
 
@@ -57,6 +57,12 @@ LEVELS = [
          key=("G", 3), chords=[("G", "m"), ("Eb", "M"), ("F", "M"), ("D", "M")],
          opponent_voice="saw", opponent_octave=3, player_octave=4, mirror=0.35,
          ai=dict(healthDrainPerNote=0.008, drainFloor=0.2)),
+    # Secret boss: hidden until Gothic Monarch is cleared or the title-screen code is entered.
+    dict(level=5, slug="abyssal-requiem", song="Abyssal Requiem", stage="Abyss",
+         opponent="The Requiem", difficulty="Nightmare", bpm=180, speed=1.6, pairs=18, seed=505,
+         key=("F#", 3), chords=[("F#", "m"), ("D", "M"), ("B", "m"), ("C#", "M")],
+         opponent_voice="organ", opponent_octave=4, player_octave=4, mirror=0.5,
+         ai=dict(healthDrainPerNote=0.012, drainFloor=0.15)),
 ]
 
 # One-beat rhythm cells: (offset in beats, hold length in beats).
@@ -75,8 +81,9 @@ WEIGHTS = {
     "Medium": {"q": 4, "e": 4, "rest": 1, "hold2": 1.5, "hold1": 1, "dot": 1, "off": 1},
     "Hard":   {"q": 2, "e": 5, "es": 2, "se": 2, "dot": 1.5, "hold2": 1, "hold1": 1, "jump": 1, "off": 1, "s": 0.6},
     "Expert": {"e": 4, "s": 3, "es": 3, "se": 3, "q": 1, "jump": 1.5, "hold1": 1, "hold2": 0.7, "dot": 1},
+    "Nightmare": {"s": 5, "es": 4, "se": 4, "e": 3, "jump": 2.5, "dot": 1, "hold1": 0.8, "hold2": 0.5},
 }
-REPEAT_CHANCE = {"Easy": 0.25, "Medium": 0.2, "Hard": 0.15, "Expert": 0.12}
+REPEAT_CHANCE = {"Easy": 0.25, "Medium": 0.2, "Hard": 0.15, "Expert": 0.12, "Nightmare": 0.1}
 DENSE_CELLS = {"e", "es", "se", "s", "jump", "dot"}
 PHRASE_ORDER = [0, 1, 0, 2, 3, 1, 2, 3]
 
@@ -329,7 +336,7 @@ def sung_note(kind, midi, seconds):
 def pad_chord(midis, seconds, style):
     n = int(seconds * SR)
     t = np.arange(n) / SR
-    partials = ((0.5, 0.25), (1, 0.6), (2, 0.4), (3, 0.25), (4, 0.18), (6, 0.1), (8, 0.08)) if style == "cathedral" \
+    partials = ((0.5, 0.25), (1, 0.6), (2, 0.4), (3, 0.25), (4, 0.18), (6, 0.1), (8, 0.08)) if style in ("Cathedral", "Abyss") \
         else ((1, 0.6), (2, 0.25), (3, 0.1))
     out = np.zeros(n)
     for m in midis:
@@ -406,6 +413,8 @@ STYLE = {
                       bass="pedal", bass_step=8, pad=0.75, arp_gain=0.0, bass_gain=0.45, drum_gain=0.8, crash_every=8, fill=True),
     "VampireCastle": dict(kick=[0, 4, 8, 12, 14], snare=[4, 12], hat=list(range(16)), arp="pluck", arp_step=1,
                           bass="dist", bass_step=2, pad=0.4, arp_gain=0.16, bass_gain=0.3, drum_gain=0.85, crash_every=4, fill=True),
+    "Abyss": dict(kick=[0, 3, 6, 8, 10, 12, 14], snare=[4, 12], hat=list(range(16)), arp="bell", arp_step=2,
+                  bass="dist", bass_step=1, pad=0.7, arp_gain=0.14, bass_gain=0.26, drum_gain=0.9, crash_every=2, fill=True),
 }
 
 
@@ -525,7 +534,7 @@ def write_audio(cfg, inst, vocals):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--level", type=int, choices=[1, 2, 3, 4])
+    parser.add_argument("--level", type=int, choices=[1, 2, 3, 4, 5])
     parser.add_argument("--charts-only", action="store_true")
     args = parser.parse_args()
 

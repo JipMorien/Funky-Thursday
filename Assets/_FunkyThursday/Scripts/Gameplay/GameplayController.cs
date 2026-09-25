@@ -196,6 +196,10 @@ namespace FunkyThursday.Gameplay
             opponentAI.Configure(chart.Data.ai);
 
             judge.GhostTapping = GameSettings.GhostTapping;
+            TimingProfile timing = TimingProfile.For(GameSettings.Timing);
+            judge.SetWindows(timing.PerfectWindowMs, timing.GoodWindowMs, timing.MissWindowMs);
+            health.LossScale = timing.LossScale;
+            health.DrainScale = timing.DrainScale;
             judge.enabled = !botplay;
             playerBot.enabled = botplay;
 

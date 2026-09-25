@@ -463,3 +463,27 @@ Without it, Vesper flashes grey on a miss, which already reads well.
 ```text
 Vesper, the pixel-art character in the start frame. The character flinches backward in shock: the hood droops, the glowing eyes dim to grey, arms flail, a small puff of dark smoke pops beside the head. Then holds the stunned, embarrassed pose. Locked-off static camera: no zoom, no pan, no cuts, no camera shake. The background stays a perfectly flat, even chroma-key green (#00FF00) for the entire clip. Keep the exact same character design, proportions, colours and pixel-art style as the start frame. Snappy, exaggerated 2D fighting-game animation with clear key poses.
 ```
+
+## Secret boss · The Requiem (level 5, Abyssal Requiem)
+
+Hidden night: appears after Gothic Monarch is cleared, or when Up Up Down Down Left Right Left Right is typed on the title screen. Both stills were generated on 23 Sep 2026 and are included in Tools/fetch_tier1.py.
+
+### S1. Abyss · background still
+
+- **Model:** GPT Image 2 · aspect ratio: 16:9 · quality: low · resolution: 1k
+- **Save as:** `HiggsfieldRaw/bg_abyssal-requiem.png`
+- **Import:** `python Tools/higgs_import.py background HiggsfieldRaw/bg_abyssal-requiem.png --slug abyssal-requiem`
+
+```text
+16-bit dark gothic pixel art, SNES-era game sprite style, crisp hard-edged pixels with a visible pixel grid, limited palette of deep violet, midnight blue, bone white and blood red, dramatic rim lighting, no anti-aliasing, no blur, no painterly brushwork, no text, no watermark, no border. Wide 16:9 side-view 2D rhythm-game stage background of the Abyssal Choir: the broken floating ruins of a gothic chapel drifting in an endless starless black void, shattered stained-glass windows hanging in mid-air, floating stone pews and chunks of masonry, a gigantic cracked bronze bell suspended by chains, rows of pale ice-blue spectral candles, a black eclipsed moon with a blood-red corona high in the sky. A flat, open broken stone floor strip runs across the bottom 15% of the frame for two characters to stand on. The centre of the frame is kept clear and slightly darker so characters read against it; the most detailed landmarks sit in the left and right thirds. No characters, no people, no text.
+```
+
+### S2. The Requiem · base image
+
+- **Model:** GPT Image 2 · aspect ratio: 1:1 · quality: low · resolution: 1k
+- **Save as:** `HiggsfieldRaw/requiem_base.png`
+- **Import:** `python Tools/higgs_import.py base HiggsfieldRaw/requiem_base.png --id requiem`
+
+```text
+16-bit dark gothic pixel art, SNES-era game sprite style, crisp hard-edged pixels with a visible pixel grid, limited palette of deep violet, midnight blue, bone white and blood red, dramatic rim lighting, no anti-aliasing, no blur, no painterly brushwork, no text, no watermark, no border. Full-body side-view fighting-game character sprite of The Requiem, a towering skeletal choir conductor: long flowing bone-white funeral robes with a ragged hem and deep violet lining, a cracked stone halo floating behind a pale skull, glowing icy blue-white eyes, long skeletal fingers, standing in a dramatic singing stance holding a black bone conductor's baton raised like a microphone, body turned three-quarters toward the RIGHT side of the frame. The whole figure is visible and centered, feet near the bottom edge with a small margin, head in the upper third, arms slightly away from the body. Background: a perfectly flat, solid chroma-key green (#00FF00) with no floor, no cast shadow, no scenery and no gradient.
+```

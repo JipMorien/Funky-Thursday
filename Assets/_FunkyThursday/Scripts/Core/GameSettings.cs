@@ -13,6 +13,7 @@ namespace FunkyThursday.Core
         const string VolumeKey = "ft.settings.volume";
         const string GhostKey = "ft.settings.ghostTapping";
         const string UnlockKey = "ft.settings.unlockAll";
+        const string TimingKey = "ft.settings.timing";
 
         public const float MinOffsetMs = -300f;
         public const float MaxOffsetMs = 300f;
@@ -44,6 +45,17 @@ namespace FunkyThursday.Core
         {
             get => PlayerPrefs.GetInt(UnlockKey, 0) == 1;
             set => Save(() => PlayerPrefs.SetInt(UnlockKey, value ? 1 : 0));
+        }
+
+        /// <summary>Hit-window leniency; see <see cref="TimingProfile"/>.</summary>
+        public static TimingMode Timing
+        {
+            get
+            {
+                int value = PlayerPrefs.GetInt(TimingKey, (int)TimingMode.Standard);
+                return value >= (int)TimingMode.Standard && value <= (int)TimingMode.Demo ? (TimingMode)value : TimingMode.Standard;
+            }
+            set => Save(() => PlayerPrefs.SetInt(TimingKey, (int)value));
         }
 
         /// <summary>Pushes the volume to the AudioListener. Call once per scene.</summary>

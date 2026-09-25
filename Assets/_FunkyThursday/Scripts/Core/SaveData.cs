@@ -37,6 +37,17 @@ namespace FunkyThursday.Core
             return true;
         }
 
+        const string SecretKey = "ft.secret.revealed";
+
+        /// <summary>True once the title-screen code has been entered on this machine.</summary>
+        public static bool SecretRevealed => PlayerPrefs.GetInt(SecretKey, 0) == 1;
+
+        public static void RevealSecret()
+        {
+            PlayerPrefs.SetInt(SecretKey, 1);
+            PlayerPrefs.Save();
+        }
+
         public static void ResetSong(string songId)
         {
             PlayerPrefs.DeleteKey(Key(songId));

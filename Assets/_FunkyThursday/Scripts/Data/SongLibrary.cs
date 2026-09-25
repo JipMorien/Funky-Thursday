@@ -17,7 +17,8 @@ namespace FunkyThursday.Data
         public Color playerEyes = new Color32(0x7F, 0xE7, 0xFF, 0xFF);
 
         [Header("Progression")]
-        [Tooltip("Each level unlocks when the previous one is cleared (Options → Unlock All overrides).")]
+        [Tooltip("Each level unlocks when the previous one is cleared (Options → Unlock All overrides). " +
+                 "Secret levels stay hidden until revealed, then play like any other level.")]
         public bool requireUnlocks = true;
 
         public int Count => songs != null ? songs.Length : 0;
@@ -26,7 +27,40 @@ namespace FunkyThursday.Data
 
         public bool IsUnlocked(int index)
         {
-            if (index <= 0 || !requireUnlocks || GameSettings.UnlockAll) return index >= 0 && index < Count;
+            SongData song = Get(index);
+            if (song == null) return false;
+            if (song.secret) return IsVisible(index);
+            if (index == 0 || !requireUnlocks || GameSettings.UnlockAll) return true;
+            return PreviousCleared(index);
+        }
+
+        /// <summary>
+        /// Whether the Level Select lists this song. Normal songs always show (as ??? while locked);
+        /// a secret one appears only after its previous level is cleared or the title code is entered.
+        /// </summary>
+        public bool IsVisible(int index)
+        {
+            SongData song = Get(index);
+            if (song == null) return false;
+            if (!song.secret) return true;
+            return GameSettings.UnlockAll || SaveData.SecretRevealed || PreviousCleared(index);
+        }
+
+        /// <summary>Index of the first secret song, or -1.</summary>
+        public int SecretIndex
+        {
+            get
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (songs[i] != null && songs[i].secret) return i;
+                }
+                return -1;
+            }
+        }
+
+        bool PreviousCleared(int index)
+        {
             SongData previous = Get(index - 1);
             return previous == null || SaveData.IsCleared(previous.id);
         }

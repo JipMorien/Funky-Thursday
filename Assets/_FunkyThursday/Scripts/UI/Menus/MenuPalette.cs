@@ -12,6 +12,7 @@ namespace FunkyThursday.UI.Menus
         public static readonly Color Moss = new Color32(0x67, 0xB3, 0x74, 0xFF);
         public static readonly Color Moonlit = new Color32(0x5B, 0x98, 0xD6, 0xFF);
         public static readonly Color Amethyst = new Color32(0xA6, 0x6A, 0xD6, 0xFF);
+        public static readonly Color Spectral = new Color32(0x9F, 0xE8, 0xFF, 0xFF);
         public static readonly Color Dim = new Color(0.043f, 0.027f, 0.063f, 0.72f);
 
         public static Color ForDifficulty(string difficulty)
@@ -22,6 +23,7 @@ namespace FunkyThursday.UI.Menus
                 case "medium": return Moonlit;
                 case "hard": return Amethyst;
                 case "expert": return Blood;
+                case "nightmare": return Spectral;
                 default: return Ash;
             }
         }

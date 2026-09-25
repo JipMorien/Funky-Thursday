@@ -9,9 +9,10 @@ using UnityEngine.UI;
 namespace FunkyThursday.UI.Menus
 {
     /// <summary>
-    /// Level Select: the four nights on the left, the highlighted opponent on the right (icon, name,
+    /// Level Select: the nights on the left, the highlighted opponent on the right (icon, name,
     /// difficulty, tempo, best result). The backdrop and music preview follow the selection. Locked
-    /// nights show as ??? until the previous one is cleared.
+    /// nights show as ??? until the previous one is cleared; a secret night is left out of the list
+    /// entirely until it has been revealed. List rows map to library indices through _rows.
     /// </summary>
     public sealed class LevelSelectScreen : MenuScreen
     {
@@ -24,6 +25,7 @@ namespace FunkyThursday.UI.Menus
         PixelText _best;
         PixelText _prompt;
         int _pendingIndex = -1;
+        readonly List<int> _rows = new List<int>();
 
         protected override void Build()
         {
@@ -35,8 +37,8 @@ namespace FunkyThursday.UI.Menus
             RectTransform listRect = UIFactory.Anchored("Song List", Root, new Vector2(0f, 1f), new Vector2(128f, -260f), new Vector2(860f, 400f));
             _list = listRect.gameObject.AddComponent<MenuList>();
             _list.Configure(6f, 96f, TextAnchor.MiddleLeft);
-            _list.SelectionChanged += ShowDetails;
-            _list.Confirmed += index => Menu.StartSong(index);
+            _list.SelectionChanged += row => ShowDetails(LibraryIndex(row));
+            _list.Confirmed += row => Menu.StartSong(LibraryIndex(row));
             _list.BackRequested += () => Menu.OpenMain();
 
             // Detail panel on the right.
@@ -66,11 +68,11 @@ namespace FunkyThursday.UI.Menus
             Refresh();
             if (_pendingIndex >= 0)
             {
-                _list.Select(_pendingIndex, notify: false, sound: false);
+                _list.Select(RowOf(_pendingIndex), notify: false, sound: false);
                 _pendingIndex = -1;
             }
             _list.Focus();
-            ShowDetails(_list.Selected);
+            ShowDetails(LibraryIndex(_list.Selected));
         }
 
         public override void Close()
@@ -79,7 +81,7 @@ namespace FunkyThursday.UI.Menus
             base.Close();
         }
 
-        /// <summary>Highlights a song, e.g. the one just played. Applied on the next Open if closed.</summary>
+        /// <summary>Highlights a song by library index, e.g. the one just played. Applied on the next Open if closed.</summary>
         public void SelectIndex(int index)
         {
             if (!IsOpen)
@@ -87,23 +89,35 @@ namespace FunkyThursday.UI.Menus
                 _pendingIndex = index;
                 return;
             }
-            _list.Select(index, notify: false, sound: false);
-            ShowDetails(index);
+            _list.Select(RowOf(index), notify: false, sound: false);
+            ShowDetails(LibraryIndex(_list.Selected));
         }
 
         void Refresh()
         {
             SongLibrary library = Menu.Library;
             var labels = new List<string>();
+            _rows.Clear();
             for (int i = 0; i < library.Count; i++)
             {
                 SongData song = library.Get(i);
+                if (song == null || !library.IsVisible(i)) continue;
                 bool unlocked = library.IsUnlocked(i);
                 string mark = SaveData.IsCleared(song.id) ? " *" : "";
-                labels.Add(unlocked ? $"{i + 1}  {song.displayName}{mark}" : $"{i + 1}  ???");
+                string number = song.secret ? "X" : (i + 1).ToString();
+                labels.Add(unlocked ? $"{number}  {song.displayName}{mark}" : $"{number}  ???");
+                _rows.Add(i);
             }
             _list.SetItems(labels);
-            for (int i = 0; i < library.Count; i++) _list.SetLocked(i, !library.IsUnlocked(i));
+            for (int row = 0; row < _rows.Count; row++) _list.SetLocked(row, !library.IsUnlocked(_rows[row]));
+        }
+
+        int LibraryIndex(int row) => row >= 0 && row < _rows.Count ? _rows[row] : -1;
+
+        int RowOf(int libraryIndex)
+        {
+            int row = _rows.IndexOf(libraryIndex);
+            return row >= 0 ? row : 0;
         }
 
         void ShowDetails(int index)

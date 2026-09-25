@@ -77,6 +77,14 @@ namespace FunkyThursday.UI.Menus
         public void OpenLevelSelect() => Switch(_levelSelect);
         public void OpenOptions() => Switch(_options);
 
+        /// <summary>Opens the Level Select on the secret night (after the title-screen code).</summary>
+        public void OpenSecret()
+        {
+            int index = Library.SecretIndex;
+            if (index >= 0) _levelSelect.SelectIndex(index);
+            Switch(_levelSelect);
+        }
+
         public void StartSong(int index)
         {
             if (SongManager.Instance != null)

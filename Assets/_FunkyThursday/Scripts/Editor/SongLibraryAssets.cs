@@ -6,7 +6,7 @@ using UnityEngine;
 namespace FunkyThursday.EditorTools
 {
     /// <summary>
-    /// Creates (or tops up) the four SongData assets and the SongLibrary under Data/Songs from the
+    /// Creates (or tops up) the SongData assets (four nights plus the secret boss) and the SongLibrary under Data/Songs from the
     /// generated charts and music. Existing values are kept; only empty fields are filled.
     /// </summary>
     public static class SongLibraryAssets
@@ -27,6 +27,7 @@ namespace FunkyThursday.EditorTools
             public Color32 Eyes;
             public Color32 Tint;
             public float PreviewBeat;
+            public bool Secret;
         }
 
         public static readonly Spec[] Specs =
@@ -39,9 +40,12 @@ namespace FunkyThursday.EditorTools
                 Cloak = new Color32(0x3A, 0x1A, 0x5C, 255), Eyes = new Color32(0xD0, 0x8C, 0xFF, 255), Tint = new Color32(0xC9, 0xB6, 0xF0, 255), PreviewBeat = 120 },
             new Spec { Id = "gothic-monarch", Name = "Gothic Monarch", Opponent = "The Gothic Monarch", OpponentId = "monarch", Difficulty = "Expert",
                 Cloak = new Color32(0x5A, 0x14, 0x24, 255), Eyes = new Color32(0xFF, 0x4A, 0x3D, 255), Tint = new Color32(0xF0, 0xA0, 0xA8, 255), PreviewBeat = 136 },
+            new Spec { Id = "abyssal-requiem", Name = "Abyssal Requiem", Opponent = "The Requiem", OpponentId = "requiem", Difficulty = "Nightmare",
+                Cloak = new Color32(0xD8, 0xD0, 0xC0, 255), Eyes = new Color32(0x9F, 0xE8, 0xFF, 255), Tint = new Color32(0x7A, 0x88, 0xC8, 255), PreviewBeat = 152,
+                Secret = true },
         };
 
-        static readonly int[] Bpms = { 100, 125, 145, 165 };
+        static readonly int[] Bpms = { 100, 125, 145, 165, 180 };
 
         [MenuItem("Funky Thursday/Create or Update Song Library")]
         static void EnsureLibraryMenu()
@@ -106,6 +110,7 @@ namespace FunkyThursday.EditorTools
             if (string.IsNullOrEmpty(song.opponentName)) song.opponentName = spec.Opponent;
             if (string.IsNullOrEmpty(song.difficulty)) song.difficulty = spec.Difficulty;
             song.level = index + 1;
+            song.secret = spec.Secret;
 
             if (song.chart == null) song.chart = AssetDatabase.LoadAssetAtPath<TextAsset>($"{ChartFolder}/level{index + 1}-{spec.Id}.json");
             if (song.instrumental == null) song.instrumental = AssetDatabase.LoadAssetAtPath<AudioClip>($"{MusicFolder}/{spec.Id}/Inst.ogg");

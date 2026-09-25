@@ -19,6 +19,8 @@ namespace FunkyThursday.Data
         public string opponentName;
         public string difficulty;
         [Min(1)] public int level = 1;
+        [Tooltip("Hidden from the Level Select until revealed: by clearing the previous level or the title-screen code.")]
+        public bool secret;
 
         [Header("Song")]
         public TextAsset chart;

@@ -17,6 +17,7 @@ MonoBehaviour:
   opponentName: The Gatekeeper
   difficulty: Easy
   level: 1
+  secret: 0
   chart: {fileID: 4900000, guid: 04ea7943fb9baea4186c234dc8d87059, type: 3}
   instrumental: {fileID: 8300000, guid: c71630521d006e744a1901676de9f4ba, type: 3}
   vocals: {fileID: 8300000, guid: b1d3a51b59b0bec47b1765a6296ceb91, type: 3}

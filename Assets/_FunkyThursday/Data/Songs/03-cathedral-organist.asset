@@ -17,6 +17,7 @@ MonoBehaviour:
   opponentName: The Organist
   difficulty: Hard
   level: 3
+  secret: 0
   chart: {fileID: 4900000, guid: 4f9720aa49cda3f4aa65d820a526a4a3, type: 3}
   instrumental: {fileID: 8300000, guid: 2d16777b109fcc040b738996e0fd0c69, type: 3}
   vocals: {fileID: 8300000, guid: f4172e3daee4b514da89b07186d26615, type: 3}

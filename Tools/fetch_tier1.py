@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Downloads the nine Tier 1 images generated on Higgsfield (23 Sep 2026) into HiggsfieldRaw/ and runs
+Downloads the Tier 1 images generated on Higgsfield (23 Sep 2026), including the secret boss, into HiggsfieldRaw/ and runs
 higgs_import.py on each, so the characters, icons and backgrounds land in Assets/_FunkyThursday/Art.
 
     python Tools/fetch_tier1.py            # download + import everything
@@ -30,6 +30,9 @@ IMAGES = [
     ("organist_base.png", "hf_20260923_123240_03bb3622-942a-4471-90af-37b503e75421.png", ["base", "--id", "organist"]),
     ("bg_gothic-monarch.png", "hf_20260923_123334_cfc01ff6-48a5-4ad9-bcfa-5002901c2a28.png", ["background", "--slug", "gothic-monarch"]),
     ("monarch_base.png", "hf_20260923_123408_3df1e5d6-f917-436d-b8ec-36954d83397b.png", ["base", "--id", "monarch"]),
+    # Secret boss (level 5)
+    ("bg_abyssal-requiem.png", "hf_20260923_132259_ea289e47-a660-4626-9415-2ec0464943ce.png", ["background", "--slug", "abyssal-requiem"]),
+    ("requiem_base.png", "hf_20260923_132429_c400f887-1e78-425d-9c9a-f32ee2bd941f.png", ["base", "--id", "requiem"]),
 ]
 
 
@@ -64,7 +67,7 @@ def main():
         print("Not imported: " + ", ".join(failed))
         print("Download those from your Higgsfield gallery into HiggsfieldRaw/ and re-run with --skip-download.")
     else:
-        print("All nine imported. In Unity: Funky Thursday -> Link Higgsfield Art.")
+        print(f"All {len(IMAGES)} imported. In Unity: Funky Thursday -> Link Higgsfield Art.")
 
 
 if __name__ == "__main__":

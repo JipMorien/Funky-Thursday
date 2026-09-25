@@ -1,10 +1,22 @@
+using System.Collections;
+using FunkyThursday.Core;
 using UnityEngine;
 
 namespace FunkyThursday.UI.Menus
 {
-    /// <summary>Title screen: the logo pulses on the beat of the menu music; Play, Options, Quit.</summary>
+    /// <summary>
+    /// Title screen: the logo pulses on the beat of the menu music; Play, Options, Quit.
+    /// Typing Up Up Down Down Left Right Left Right reveals the secret night and jumps straight to it.
+    /// </summary>
     public sealed class MainMenuScreen : MenuScreen
     {
+        enum Arrow { Up, Down, Left, Right }
+
+        static readonly Arrow[] SecretCode =
+        {
+            Arrow.Up, Arrow.Up, Arrow.Down, Arrow.Down, Arrow.Left, Arrow.Right, Arrow.Left, Arrow.Right
+        };
+
         const int Play = 0;
         const int Options = 1;
         const int Quit = 2;
@@ -12,6 +24,9 @@ namespace FunkyThursday.UI.Menus
         PixelText _titleTop;
         PixelText _titleBottom;
         MenuList _list;
+        PixelText _tagline;
+        int _codeProgress;
+        bool _revealing;
 
         protected override void Build()
         {
@@ -20,8 +35,8 @@ namespace FunkyThursday.UI.Menus
             _titleBottom = UIFactory.Text("Title Thursday", Root, "THURSDAY", 26f, MenuPalette.Blood);
             Place(_titleBottom.rectTransform, -370f);
 
-            PixelText tagline = UIFactory.Text("Tagline", Root, "A GOTHIC RHYTHM DUEL IN FOUR NIGHTS", 5f, MenuPalette.Ash);
-            Place(tagline.rectTransform, -590f);
+            _tagline = UIFactory.Text("Tagline", Root, Tagline, 5f, MenuPalette.Ash);
+            Place(_tagline.rectTransform, -590f);
 
             RectTransform listRect = UIFactory.Anchored("Main List", Root, new Vector2(0.5f, 1f), new Vector2(0f, -700f), new Vector2(800f, 300f));
             _list = listRect.gameObject.AddComponent<MenuList>();
@@ -36,9 +51,16 @@ namespace FunkyThursday.UI.Menus
             f.anchoredPosition = new Vector2(0f, 48f);
         }
 
+        const string Tagline = "A THURSDAY. BUT FUNKY.";
+
         public override void Open()
         {
             base.Open();
+            _codeProgress = 0;
+            _revealing = false;
+            _tagline.Text = Tagline;
+            _tagline.color = MenuPalette.Ash;
+            _tagline.FitToText();
             _list.Focus();
             Menu.PlayTitleMusic();
         }
@@ -51,6 +73,8 @@ namespace FunkyThursday.UI.Menus
 
         void Update()
         {
+            TrackSecretCode();
+
             // Logo pops on each beat and settles.
             float pulse = 1f + 0.05f * Mathf.Pow(1f - Menu.BeatFraction, 3f);
             _titleTop.rectTransform.localScale = Vector3.one * pulse;
@@ -74,6 +98,43 @@ namespace FunkyThursday.UI.Menus
 #endif
                     break;
             }
+        }
+
+        void TrackSecretCode()
+        {
+            if (_revealing || Menu.Library == null || Menu.Library.SecretIndex < 0) return;
+
+            Arrow? pressed = MenuInput.UpPressed ? Arrow.Up
+                : MenuInput.DownPressed ? Arrow.Down
+                : MenuInput.LeftPressed ? Arrow.Left
+                : MenuInput.RightPressed ? Arrow.Right
+                : (Arrow?)null;
+            if (pressed == null) return;
+
+            if (pressed == SecretCode[_codeProgress]) _codeProgress++;
+            else _codeProgress = pressed == SecretCode[0] ? 1 : 0;
+
+            if (_codeProgress == SecretCode.Length) StartCoroutine(Reveal());
+        }
+
+        IEnumerator Reveal()
+        {
+            _revealing = true;
+            _list.Unfocus();
+            SaveData.RevealSecret();
+            MenuSfx.Play(MenuSfx.Sound.Secret);
+
+            _tagline.Text = "SOMETHING STIRS BENEATH THE FOURTH NIGHT";
+            _tagline.color = MenuPalette.Spectral;
+            _tagline.FitToText();
+
+            for (float t = 0f; t < 1.6f; t += Time.unscaledDeltaTime)
+            {
+                _tagline.enabled = Mathf.Repeat(t, 0.2f) < 0.12f;
+                yield return null;
+            }
+            _tagline.enabled = true;
+            Menu.OpenSecret();
         }
 
         static void Place(RectTransform rect, float y)

@@ -17,6 +17,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ce604a8cefdb664e9fd8ded07dc6fcc, type: 2}
   - {fileID: 11400000, guid: e025eca868f084c4683d0c87cdc88d56, type: 2}
   - {fileID: 11400000, guid: cce6a0df25dc8a444a0ac882138805d5, type: 2}
+  - {fileID: 11400000, guid: c089be398bcf56841ae08793a9a4ab52, type: 2}
   playerPoses:
     idle: {fileID: 0}
     left: {fileID: 0}

@@ -25,6 +25,12 @@ namespace FunkyThursday.Gameplay
         [Header("Debug")]
         [SerializeField] bool invincible;
 
+        /// <summary>Multiplies every health loss (misses, dropped holds, ghost taps). 1 = normal.</summary>
+        public float LossScale { get; set; } = 1f;
+
+        /// <summary>Multiplies opponent drain. 0 turns it off.</summary>
+        public float DrainScale { get; set; } = 1f;
+
         public float Value { get; private set; }
         public bool IsDead { get; private set; }
 
@@ -50,7 +56,7 @@ namespace FunkyThursday.Gameplay
                     Add(goodGain);
                     break;
                 default:
-                    Add(-(result.Kind == HitKind.GhostTap ? ghostTapLoss
+                    Add(-LossScale * (result.Kind == HitKind.GhostTap ? ghostTapLoss
                         : result.Kind == HitKind.HoldDropped ? holdDropLoss
                         : missLoss));
                     break;
@@ -62,7 +68,8 @@ namespace FunkyThursday.Gameplay
         /// <summary>Opponent drain: removes up to <paramref name="amount"/> but never below <paramref name="floor"/>.</summary>
         public void Drain(float amount, float floor)
         {
-            if (Value <= floor) return;
+            amount *= DrainScale;
+            if (amount <= 0f || Value <= floor) return;
             Set(Mathf.Max(floor, Value - amount));
         }
 

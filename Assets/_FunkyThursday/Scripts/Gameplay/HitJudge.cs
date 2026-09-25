@@ -77,6 +77,14 @@ namespace FunkyThursday.Gameplay
         public float GoodWindowMs => goodWindowMs;
         public float MissWindowMs => missWindowMs;
 
+        /// <summary>Replaces all three hit windows, e.g. from a <see cref="TimingProfile"/>. Keeps them ordered.</summary>
+        public void SetWindows(float perfectMs, float goodMs, float missMs)
+        {
+            perfectWindowMs = Mathf.Max(1f, perfectMs);
+            goodWindowMs = Mathf.Max(perfectWindowMs, goodMs);
+            missWindowMs = Mathf.Max(goodWindowMs, missMs);
+        }
+
         void OnValidate()
         {
             goodWindowMs = Mathf.Max(goodWindowMs, perfectWindowMs);
