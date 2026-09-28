@@ -111,3 +111,17 @@ HiggsfieldRaw/
 
 # fmod spike: copies of the songs for streaming
 Assets/StreamingAssets/FmodSpike/
+
+# fmod spike: only desktop libraries are committed (the game targets windows, linux and mac)
+Assets/Plugins/FMOD/platforms/html5/lib/
+Assets/Plugins/FMOD/platforms/html5/lib.meta
+Assets/Plugins/FMOD/platforms/visionos/lib/
+Assets/Plugins/FMOD/platforms/visionos/lib.meta
+Assets/Plugins/FMOD/platforms/ios/lib/
+Assets/Plugins/FMOD/platforms/ios/lib.meta
+Assets/Plugins/FMOD/platforms/tvos/lib/
+Assets/Plugins/FMOD/platforms/tvos/lib.meta
+Assets/Plugins/FMOD/platforms/android/lib/
+Assets/Plugins/FMOD/platforms/android/lib.meta
+Assets/Plugins/FMOD/platforms/uwp/lib/
+Assets/Plugins/FMOD/platforms/uwp/lib.meta
