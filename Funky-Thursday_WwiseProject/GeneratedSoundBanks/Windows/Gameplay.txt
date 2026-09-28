@@ -1,0 +1,10 @@
+Event	ID	Name			Wwise Object Path	Notes
+	1264580112	Play_Note_Perfect			\Default Work Unit\Play_Note_Perfect	
+	2851965474	Play_Note_Good			\Default Work Unit\Play_Note_Good	
+	4119657905	Play_Note_Miss			\Default Work Unit\Play_Note_Miss	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	296418556	perfect	.cache\9B\{9B752535-A741-F21E-9BF8-7813A9985035}.wem		\Containers\Default Work Unit\perfect		220820
+	585110967	miss	.cache\25\{25D62D8A-C57C-F6F6-CCA6-0374A4861E4E}.wem		\Containers\Default Work Unit\miss		148240
+	715598394	good	.cache\4F\{4FE14AFB-DB2F-F19D-53D9-8A89FC75D532}.wem		\Containers\Default Work Unit\good		190412
+

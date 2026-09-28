@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{BF39B7C1-547B-469C-806B-BFB465C092B0}" SchemaVersion="133">
+	<SoundBanks>
+		<WorkUnit Name="Default Work Unit" ID="{BF39B7C1-547B-469C-806B-BFB465C092B0}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundBank Name="Gameplay" ID="{AA195721-D6C0-4F0E-B016-01AEE8B3AECF}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Play_Note_Miss" ID="{23DA3ACC-AB1A-49A3-945A-C325944533B0}" WorkUnitID="{8B662EE1-E607-496F-9619-6208F3515A7E}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_Note_Perfect" ID="{331319F5-C2E4-4B01-9637-B814714D5790}" WorkUnitID="{8B662EE1-E607-496F-9619-6208F3515A7E}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_Note_Good" ID="{6E5C8912-3F0D-4FA8-A71D-E73F93B1E827}" WorkUnitID="{8B662EE1-E607-496F-9619-6208F3515A7E}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+			</ChildrenList>
+		</WorkUnit>
+	</SoundBanks>
+</WwiseDocument>

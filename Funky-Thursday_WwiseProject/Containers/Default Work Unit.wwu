@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{C481D9BD-C503-4ED3-B577-517E5AD066AD}" SchemaVersion="133">
+	<Containers>
+		<WorkUnit Name="Default Work Unit" ID="{C481D9BD-C503-4ED3-B577-517E5AD066AD}" PersistMode="Standalone">
+			<ChildrenList>
+				<Sound Name="good" ID="{E5D00D12-7ABA-42BC-BF96-5ECDADF13DFD}" ShortID="354326039">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{6CB680D1-B730-45C6-9ACE-4B7038A698EA}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EE34B6E7-B77A-446A-8F83-EA5871AFCF69}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="good" ID="{DDFD7848-6C79-4F4A-BAB2-CFE75F7E236A}">
+							<Language>SFX</Language>
+							<AudioFile>good.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="715598394"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="good" ID="{DDFD7848-6C79-4F4A-BAB2-CFE75F7E236A}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="miss" ID="{E7239097-20FD-4769-9E65-AD3201491614}" ShortID="1014740685">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{6CB680D1-B730-45C6-9ACE-4B7038A698EA}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EE34B6E7-B77A-446A-8F83-EA5871AFCF69}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="miss" ID="{FDEBC0EA-3E9D-478E-B362-B762C9179D9D}">
+							<Language>SFX</Language>
+							<AudioFile>miss.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="585110967"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="miss" ID="{FDEBC0EA-3E9D-478E-B362-B762C9179D9D}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="perfect" ID="{1A8C89F1-EC54-4F5F-8534-D868BB7F046E}" ShortID="772500465">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{6CB680D1-B730-45C6-9ACE-4B7038A698EA}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{EE34B6E7-B77A-446A-8F83-EA5871AFCF69}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="perfect" ID="{C6BCBDED-2700-4442-9519-DEADFEFBAA23}">
+							<Language>SFX</Language>
+							<AudioFile>perfect.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="296418556"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="perfect" ID="{C6BCBDED-2700-4442-9519-DEADFEFBAA23}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
+	</Containers>
+</WwiseDocument>

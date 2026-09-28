@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{8B662EE1-E607-496F-9619-6208F3515A7E}" SchemaVersion="133">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{8B662EE1-E607-496F-9619-6208F3515A7E}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_Note_Good" ID="{6E5C8912-3F0D-4FA8-A71D-E73F93B1E827}">
+					<ChildrenList>
+						<Action Name="" ID="{2BCDA32F-C7DC-4E11-9D5F-15130A0A3B8E}" ShortID="478989769">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="good" ID="{E5D00D12-7ABA-42BC-BF96-5ECDADF13DFD}" WorkUnitID="{C481D9BD-C503-4ED3-B577-517E5AD066AD}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Note_Perfect" ID="{331319F5-C2E4-4B01-9637-B814714D5790}">
+					<ChildrenList>
+						<Action Name="" ID="{78C2C2A9-DC25-4A2B-BE25-259B6376FDDE}" ShortID="962839510">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="perfect" ID="{1A8C89F1-EC54-4F5F-8534-D868BB7F046E}" WorkUnitID="{C481D9BD-C503-4ED3-B577-517E5AD066AD}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Note_Miss" ID="{23DA3ACC-AB1A-49A3-945A-C325944533B0}">
+					<ChildrenList>
+						<Action Name="" ID="{721E5A94-1D23-4BAB-A49D-7A5E07C53FC8}" ShortID="975210205">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="miss" ID="{E7239097-20FD-4769-9E65-AD3201491614}" WorkUnitID="{C481D9BD-C503-4ED3-B577-517E5AD066AD}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>
