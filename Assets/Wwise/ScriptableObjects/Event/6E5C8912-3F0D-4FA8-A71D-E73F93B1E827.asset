@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be26695e2a163584b9712fa4b4c0e3b6, type: 3}
+  m_Name: 6E5C8912-3F0D-4FA8-A71D-E73F93B1E827
+  m_EditorClassIdentifier: AK.Wwise.Unity.API.WwiseTypes::WwiseEventReference
+  objectName: Play_Note_Good
+  id: 2851965474
+  guid: 6E5C8912-3F0D-4FA8-A71D-E73F93B1E827
+  IsInUserDefinedSoundBank: 1

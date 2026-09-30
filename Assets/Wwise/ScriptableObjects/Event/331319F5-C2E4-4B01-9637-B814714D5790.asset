@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be26695e2a163584b9712fa4b4c0e3b6, type: 3}
+  m_Name: 331319F5-C2E4-4B01-9637-B814714D5790
+  m_EditorClassIdentifier: AK.Wwise.Unity.API.WwiseTypes::WwiseEventReference
+  objectName: Play_Note_Perfect
+  id: 1264580112
+  guid: 331319F5-C2E4-4B01-9637-B814714D5790
+  IsInUserDefinedSoundBank: 1

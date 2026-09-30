@@ -61,6 +61,12 @@ namespace FunkyThursday.Gameplay
         [Tooltip("Number keys 1-4 jump between songs mid-round.")]
         [SerializeField] bool debugLevelKeys = true;
         [SerializeField] bool showOverlay;
+        
+        [Header("Wwise SFX")]
+        [SerializeField] AK.Wwise.Event perfectSfx;
+        [SerializeField] AK.Wwise.Event goodSfx;
+        [SerializeField] AK.Wwise.Event missSfx;
+
 
         RoundStats _stats;
         int _combo;
@@ -296,6 +302,8 @@ namespace FunkyThursday.Gameplay
 
             if (result.Judgement == Judgement.Miss)
             {
+                missSfx?.Post(gameObject);
+
                 _stats.misses++;
                 _combo = 0;
                 player.Miss(result.Lane);
@@ -303,8 +311,16 @@ namespace FunkyThursday.Gameplay
                 return;
             }
 
-            if (result.Judgement == Judgement.Perfect) _stats.perfects++;
-            else _stats.goods++;
+            if (result.Judgement == Judgement.Perfect)
+            {
+                perfectSfx?.Post(gameObject);
+                _stats.perfects++;
+            }
+            else
+            {
+                goodSfx?.Post(gameObject);
+                _stats.goods++;
+            }
 
             _combo++;
             _stats.maxCombo = Mathf.Max(_stats.maxCombo, _combo);

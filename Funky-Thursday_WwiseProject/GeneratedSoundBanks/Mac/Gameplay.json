@@ -1,0 +1,91 @@
+{
+ "SoundBanksInfo": {
+  "Platform": "Mac",
+  "BasePlatform": "Mac",
+  "SchemaVersion": "16",
+  "SoundBankVersion": "172",
+  "SoundBanks": [
+   {
+    "Id": "89505537",
+    "Type": "User",
+    "GUID": "{AA195721-D6C0-4F0E-B016-01AEE8B3AECF}",
+    "Language": "SFX",
+    "Hash": "{462D2452-7AF6-F4C4-E634-AD88F395BA04}",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Gameplay",
+    "ShortName": "Gameplay",
+    "Path": "Gameplay.bnk",
+    "Media": [
+     {
+      "Id": "296418556",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "perfect.wav",
+      "CachePath": "9B/{9B752535-A741-F21E-9BF8-7813A9985035}.wem"
+     },
+     {
+      "Id": "585110967",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "miss.wav",
+      "CachePath": "25/{25D62D8A-C57C-F6F6-CCA6-0374A4861E4E}.wem"
+     },
+     {
+      "Id": "715598394",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "good.wav",
+      "CachePath": "4F/{4FE14AFB-DB2F-F19D-53D9-8A89FC75D532}.wem"
+     }
+    ],
+    "Events": [
+     {
+      "Id": "2851965474",
+      "Name": "Play_Note_Good",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Note_Good",
+      "GUID": "{6E5C8912-3F0D-4FA8-A71D-E73F93B1E827}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.9912292",
+      "DurationMax": "0.9912292",
+      "MediaRefs": [
+       {
+        "Id": "715598394"
+       }
+      ]
+     },
+     {
+      "Id": "4119657905",
+      "Name": "Play_Note_Miss",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Note_Miss",
+      "GUID": "{23DA3ACC-AB1A-49A3-945A-C325944533B0}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.7715833",
+      "DurationMax": "0.7715833",
+      "MediaRefs": [
+       {
+        "Id": "585110967"
+       }
+      ]
+     },
+     {
+      "Id": "1264580112",
+      "Name": "Play_Note_Perfect",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Note_Perfect",
+      "GUID": "{331319F5-C2E4-4B01-9637-B814714D5790}",
+      "DurationType": "OneShot",
+      "DurationMin": "1.1496042",
+      "DurationMax": "1.1496042",
+      "MediaRefs": [
+       {
+        "Id": "296418556"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "FileHash": "{099A4FDF-CE9A-09BE-AD25-B43CF6BD3244}"
+ }
+}
